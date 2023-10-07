@@ -1,0 +1,15 @@
+version: '3'
+services:   
+  agent:
+    image: zabbix/zabbix-agent2:latest
+    container_name: zabbix-agent
+    restart: always
+    tty: true
+    ports:
+      - 10050:10050
+      - 10051:10051
+    environment:
+      - ZBX_HOSTNAME=nimodo
+      - ZBX_SERVER_HOST=192.168.100.143
+    volumes:
+       - ./zabbix/:/etc/zabbix/

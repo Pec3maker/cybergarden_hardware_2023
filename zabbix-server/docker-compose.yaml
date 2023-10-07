@@ -1,0 +1,38 @@
+
+version: '3'  # Adjust the version if needed
+
+services:
+  zabbix_server:
+    image: zabbix/zabbix-server-pgsql
+    container_name: zabbix_server
+    restart: always
+    environment:
+      - POSTGRES_USER=nimodo
+      - POSTGRES_PASSWORD=nimodo
+      - DB_SERVER_HOST=db
+    ports:
+      - "10051:10051"  # Adjust the port if needed
+
+  db:
+    image: postgres:15.4
+    container_name: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=nimodo
+      - POSTGRES_USER=nimodo
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - ./storage/:/var/lib/postgresql/data/
+
+  web:
+    image: zabbix/zabbix-web-nginx-pgsql
+    container_name: web
+    restart: always
+    environment:
+      - POSTGRES_USER=nimodo
+      - POSTGRES_PASSWORD=nimodo
+      - DB_SERVER_HOST=db
+      - ZBX_SERVER_HOST=zabbix_server
+      - PHP_TZ=Europe/Moscow
+    ports:
+      - 42424:8080  # Map host port 80 to container port 80
